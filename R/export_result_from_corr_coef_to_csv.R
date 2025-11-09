@@ -1,7 +1,7 @@
-# R/write_corr_coef_obj_to_csv.R
+# R/export_result_from_corr_coef_to_csv.R
 # --------------------------------
 
-#' Write corr_coef object to CSV
+#' Export corr_coef object to CSV
 #'
 #' Exports both the correlation matrix and the corresponding p-value matrix
 #' into a single comma-separated file, exactly reproducing the manual six-block
@@ -24,7 +24,7 @@
 #' export_result_from_corr_coef_to_csv(cc, "my_corr")
 #' }
 
-write_corr_coef_obj_to_csv<-function(corrCoefObj, fileNameWithoutExtension)
+export_result_from_corr_coef_to_csv<-function(corrCoefObj, fileNameWithoutExtension)
 {
 	utils::write.csv("Correlations", sep=",", row.names=FALSE, col.names=FALSE, file =  paste0(fileNameWithoutExtension,".csv"))
 	utils::write.table(data.frame(t(c("",colnames(corrCoefObj$cor)))),append= TRUE, sep=",", col.names=FALSE, row.names=FALSE, file=paste0(fileNameWithoutExtension,".csv"))   
@@ -32,5 +32,5 @@ write_corr_coef_obj_to_csv<-function(corrCoefObj, fileNameWithoutExtension)
 	write(" ",file = paste0(fileNameWithoutExtension,".csv"), append = TRUE)
 	write("P-Values For Correlations",file = paste0(fileNameWithoutExtension,".csv"), append = TRUE)
 	utils::write.table(data.frame(t(c("",colnames(corrCoefObj$pval)))), append= TRUE, sep="," ,row.names=FALSE ,col.names=FALSE, file=paste0(fileNameWithoutExtension,".csv")) 
-	write.table(corrCoefObj$pval, append= TRUE, sep=",", col.names=FALSE, file=paste0(fileNameWithoutExtension,".csv"))
+	utils::write.table(corrCoefObj$pval, append= TRUE, sep=",", col.names=FALSE, file=paste0(fileNameWithoutExtension,".csv"))
 }

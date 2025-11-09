@@ -33,11 +33,11 @@ write_lm_obj_to_csv<-function(lmObj, fileNameWithoutExtension)
  	 		Q3     = as.numeric(summary(lmObj$fitted.values)[5]),
   			Max    = as.numeric(summary(lmObj$fitted.values)[6])
 			)
-	write.csv(fitted_df, row.names=FALSE, paste0(fileNameWithoutExtension,".csv"))
+	utils::write.csv(fitted_df, row.names=FALSE, paste0(fileNameWithoutExtension,".csv"))
 	write(" ",file = paste0(fileNameWithoutExtension,".csv"), append = TRUE)
 	coef_df <- summary(lmObj)$coefficients
-	write.table(data.frame(t(c("",colnames(coef_df)))),append= TRUE, sep=",", col.names=FALSE, row.names=FALSE, file=paste0(fileNameWithoutExtension,".csv"))   
-	write.table(coef_df, file= paste0(fileNameWithoutExtension,".csv"), append = TRUE, row.names = TRUE, col.names = FALSE, sep = ",")
+	utils::write.table(data.frame(t(c("",colnames(coef_df)))),append= TRUE, sep=",", col.names=FALSE, row.names=FALSE, file=paste0(fileNameWithoutExtension,".csv"))   
+	utils::write.table(coef_df, file= paste0(fileNameWithoutExtension,".csv"), append = TRUE, row.names = TRUE, col.names = FALSE, sep = ",")
 	write(" ",file = paste0(fileNameWithoutExtension,".csv"), append = TRUE)
 
 
@@ -46,7 +46,7 @@ write_lm_obj_to_csv<-function(lmObj, fileNameWithoutExtension)
   			AdjR2     = as.numeric(summary(lmObj)$adj.r.squared),
   			Sigma     = as.numeric(summary(lmObj)$sigma),
   			F              = as.numeric(summary(lmObj)$fstatistic[1]),
-  			p_value   = pf(summary(lmObj)$fstatistic[1],
+  			p_value   = stats::pf(summary(lmObj)$fstatistic[1],
                 		 		summary(lmObj)$fstatistic[2],
                  				summary(lmObj)$fstatistic[3],
                  				lower.tail = FALSE),
@@ -54,5 +54,5 @@ write_lm_obj_to_csv<-function(lmObj, fileNameWithoutExtension)
   			df_resid  = as.numeric(summary(lmObj)$df[2])
 			)
 
-	write.table(model_df, file=paste0(fileNameWithoutExtension,".csv"), append = TRUE, row.names = FALSE, col.names = TRUE, sep = ",")
+	utils::write.table(model_df, file=paste0(fileNameWithoutExtension,".csv"), append = TRUE, row.names = FALSE, col.names = TRUE, sep = ",")
 }

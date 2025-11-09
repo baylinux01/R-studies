@@ -22,8 +22,9 @@
 #' data("Produc", package = "plm")
 #'
 #' # within-intercept model
-#' wi_mod <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+#' mod <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 #'               data = Produc, index = c("state","year"), model = "within")
+#' wi_mod<-within_intercept(mod, return.model=TRUE) 
 #' write_fem_within_intercept_obj_to_csv(wi_mod, "within_model")
 #'
 #' # random-effects model
@@ -47,20 +48,20 @@ write_fem_within_intercept_obj_to_csv <- function(femWIObj, fileNameWithoutExten
 {
   
   	fileName <- paste0(fileNameWithoutExtension, ".csv")
-	fitted_vals <- fitted(femWIObj)
+	fitted_vals <- stats::fitted(femWIObj)
   	fitted_df  <- data.frame(
     				Min    = min(fitted_vals),
-    				Q1     = as.numeric(quantile(fitted_vals, 0.25)),
-    				Median = as.numeric(quantile(fitted_vals, 0.5)),
+    				Q1     = as.numeric(stats::quantile(fitted_vals, 0.25)),
+    				Median = as.numeric(stats::quantile(fitted_vals, 0.5)),
     				Mean   = mean(fitted_vals),
-    				Q3     = as.numeric(quantile(fitted_vals, 0.75)),
+    				Q3     = as.numeric(stats::quantile(fitted_vals, 0.75)),
     				Max    = max(fitted_vals)
   			)
-  	write.csv(fitted_df, file = fileName, row.names = FALSE)
+  	utils::write.csv(fitted_df, file = fileName, row.names = FALSE)
   	write(" ", file = fileName, append = TRUE)
   	coef_mat <- summary(femWIObj)$coefficients
-  	write.table(data.frame(t(c("", colnames(coef_mat)))),  file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = FALSE)
-  	write.table(coef_mat, file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = TRUE)
+  	utils::write.table(data.frame(t(c("", colnames(coef_mat)))),  file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = FALSE)
+  	utils::write.table(coef_mat, file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = TRUE)
   	write(" ", file = fileName, append = TRUE)
 	sumObj   <- summary(femWIObj)
   	model_df <- data.frame(
@@ -70,7 +71,7 @@ write_fem_within_intercept_obj_to_csv <- function(femWIObj, fileNameWithoutExten
     			    df_model  = as.numeric(sumObj$df[1]),
     			    df_resid  = as.numeric(sumObj$df[2])
   			)
-  	write.table(model_df, file   = fileName, append = TRUE, sep    = ",", col.names = TRUE, row.names = FALSE)
+  	utils::write.table(model_df, file   = fileName, append = TRUE, sep    = ",", col.names = TRUE, row.names = FALSE)
 }
 
 #  ----------  2  RANDOM EFFECTS MODEL  ----------
@@ -80,20 +81,20 @@ write_fem_within_intercept_obj_to_csv <- function(femWIObj, fileNameWithoutExten
 write_rem_obj_to_csv <- function(remObj, fileNameWithoutExtension) 
 {
 	 fileName <- paste0(fileNameWithoutExtension, ".csv")
-	 fitted_vals <- fitted(remObj)
+	 fitted_vals <- stats::fitted(remObj)
  	 fitted_df  <- data.frame(
     			Min    = min(fitted_vals),
-    			Q1     = as.numeric(quantile(fitted_vals, 0.25)),
-   	 		Median = as.numeric(quantile(fitted_vals, 0.5)),
+    			Q1     = as.numeric(stats::quantile(fitted_vals, 0.25)),
+   	 		Median = as.numeric(stats::quantile(fitted_vals, 0.5)),
     			Mean   = mean(fitted_vals),
-    			Q3     = as.numeric(quantile(fitted_vals, 0.75)),
+    			Q3     = as.numeric(stats::quantile(fitted_vals, 0.75)),
     			Max    = max(fitted_vals)
   			)
-  	write.csv(fitted_df, file = fileName, row.names = FALSE)
+  	utils::write.csv(fitted_df, file = fileName, row.names = FALSE)
   	write(" ", file = fileName, append = TRUE)
 	coef_mat <- summary(remObj)$coefficients
-  	write.table(data.frame(t(c("", colnames(coef_mat)))), file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = FALSE)
-  	write.table(coef_mat, file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = TRUE)
+  	utils::write.table(data.frame(t(c("", colnames(coef_mat)))), file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = FALSE)
+  	utils::write.table(coef_mat, file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = TRUE)
 	 write(" ", file = fileName, append = TRUE)
   	vc <- summary(remObj)$ercomp          
 	sigmaVec <- vc$sigma2                       
@@ -102,7 +103,7 @@ write_rem_obj_to_csv <- function(remObj, fileNameWithoutExtension)
  			Var       = as.numeric(sigmaVec),
   			StdDev    = sqrt(as.numeric(sigmaVec))
 			)	
-  	write.table(var_df,  file   = fileName, append = TRUE, sep    = ",", row.names = FALSE, col.names = TRUE)
+  	utils::write.table(var_df,  file   = fileName, append = TRUE, sep    = ",", row.names = FALSE, col.names = TRUE)
   	theta <- as.numeric(vc[2])
   	write(paste0("theta: ", round(theta, 4)), file = fileName, append = TRUE)
   	write(" ", file = fileName, append = TRUE)
@@ -115,7 +116,7 @@ write_rem_obj_to_csv <- function(remObj, fileNameWithoutExtension)
     			df_model = as.numeric(sumObj$df[1]),
     			df_resid = as.numeric(sumObj$df[2])
   			)
-  	write.table(model_df,  file   = fileName, append = TRUE, sep    = ",", col.names = TRUE, row.names = FALSE)
+  	utils::write.table(model_df,  file   = fileName, append = TRUE, sep    = ",", col.names = TRUE, row.names = FALSE)
 }
 
 #  ----------  3  POOLING MODEL  ----------
@@ -126,20 +127,20 @@ write_pem_obj_to_csv <- function(pemObj, fileNameWithoutExtension)
 {
   
   	fileName <- paste0(fileNameWithoutExtension, ".csv")
-  	fitted_vals <- fitted(pemObj)
+  	fitted_vals <- stats::fitted(pemObj)
   	fitted_df  <- data.frame(
     			Min    = min(fitted_vals),
-    			Q1     = as.numeric(quantile(fitted_vals, 0.25)),
-    			Median = as.numeric(quantile(fitted_vals, 0.5)),
+    			Q1     = as.numeric(stats::quantile(fitted_vals, 0.25)),
+    			Median = as.numeric(stats::quantile(fitted_vals, 0.5)),
     			Mean   = mean(fitted_vals),
-    			Q3     = as.numeric(quantile(fitted_vals, 0.75)),
+    			Q3     = as.numeric(stats::quantile(fitted_vals, 0.75)),
     			Max    = max(fitted_vals)
   			)
- 	 write.csv(fitted_df, file = fileName, row.names = FALSE)
+ 	 utils::write.csv(fitted_df, file = fileName, row.names = FALSE)
  	 write(" ", file = fileName, append = TRUE)
  	 coef_mat <- summary(pemObj)$coefficients
- 	 write.table(data.frame(t(c("", colnames(coef_mat)))), file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = FALSE)
- 	 write.table(coef_mat, file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = TRUE)
+ 	 utils::write.table(data.frame(t(c("", colnames(coef_mat)))), file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = FALSE)
+ 	 utils::write.table(coef_mat, file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = TRUE)
  	 write(" ", file = fileName, append = TRUE)
   	sumObj   <- summary(pemObj)
   	model_df <- data.frame(
@@ -150,6 +151,6 @@ write_pem_obj_to_csv <- function(pemObj, fileNameWithoutExtension)
     			df_model = as.numeric(sumObj$df[1]),
     			df_resid = as.numeric(sumObj$df[2])
   			)
-  	write.table(model_df, file   = fileName, append = TRUE,  sep    = ",", col.names = TRUE, row.names = FALSE)
+  	utils::write.table(model_df, file   = fileName, append = TRUE,  sep    = ",", col.names = TRUE, row.names = FALSE)
 }
 

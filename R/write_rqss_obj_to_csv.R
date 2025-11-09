@@ -27,20 +27,20 @@
 write_rqss_obj_to_csv <- function(rqssObj, fileNameWithoutExtension) 
 {
   	fileName <- paste0(fileNameWithoutExtension, ".csv")
-  	 fitted_vals <- fitted(rqssObj)
+  	 fitted_vals <- stats::fitted(rqssObj)
  	 fitted_df  <- data.frame(
     		Min    = min(fitted_vals),
-    		Q1     = as.numeric(quantile(fitted_vals, 0.25)),
-    		Median = as.numeric(quantile(fitted_vals, 0.5)),
+    		Q1     = as.numeric(stats::quantile(fitted_vals, 0.25)),
+    		Median = as.numeric(stats::quantile(fitted_vals, 0.5)),
     		Mean   = mean(fitted_vals),
-    		Q3     = as.numeric(quantile(fitted_vals, 0.75)),
+    		Q3     = as.numeric(stats::quantile(fitted_vals, 0.75)),
     		Max    = max(fitted_vals)
   		)
-  	write.csv(fitted_df, file = fileName, row.names = FALSE)
+  	utils::write.csv(fitted_df, file = fileName, row.names = FALSE)
   	write(" ", file = fileName, append = TRUE)
   	coef_mat <- summary(rqssObj)$coef
-  	write.table(data.frame(t(c("", colnames(coef_mat)))), file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = FALSE)
-  	write.table(coef_mat, file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = TRUE)
+  	utils::write.table(data.frame(t(c("", colnames(coef_mat)))), file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = FALSE)
+  	utils::write.table(coef_mat, file   = fileName, append = TRUE, sep    = ",", col.names = FALSE, row.names = TRUE)
   	write(" ", file = fileName, append = TRUE)
   	sumObj   <- summary(rqssObj)
   	tau      <- as.numeric(sumObj$tau)[1]   
