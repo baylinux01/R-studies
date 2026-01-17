@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=R-4.5.2
+Comment=R Programming Language For Statistical Analyses
+Icon=/home/baylinux/R-4.5.2/doc/html/logo.jpg
+Exec=xfce4-terminal --hold -e "bash -c /home/baylinux/R-4.5.2/bin/R; exec bash"
+Terminal=false
+Categories=Development;Statistics;Math;Science
